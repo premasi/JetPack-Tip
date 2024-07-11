@@ -105,10 +105,7 @@ fun TopHeader(totalBiaya: String = "1000"){
 
 @Composable
 fun MainContent(){
-    BillForm { total ->
-
-    }
-
+    BillForm()
 }
 
 @Preview
