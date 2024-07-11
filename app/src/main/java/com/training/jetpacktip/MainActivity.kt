@@ -21,6 +21,7 @@ import androidx.compose.material3.Slider
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.mutableDoubleStateOf
 import androidx.compose.runtime.mutableFloatStateOf
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
@@ -38,6 +39,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.training.jetpacktip.components.InputTextField
 import com.training.jetpacktip.ui.theme.JetPackTipTheme
+import com.training.jetpacktip.utils.calculateTotalTip
 import com.training.jetpacktip.widgets.RoundButton
 
 class MainActivity : ComponentActivity() {
@@ -128,6 +130,8 @@ fun BillForm(modifier: Modifier = Modifier, onValueChange: (String) -> Unit = {}
     val sliderValue = (sliderState.value * 100).toInt()
 
     val keyboardController = LocalSoftwareKeyboardController.current
+
+    val totalTipAmount = calculateTotalTip(totalState.value, sliderValue, splitState.value)
 
     TopHeader()
     Surface(
@@ -224,7 +228,7 @@ fun BillForm(modifier: Modifier = Modifier, onValueChange: (String) -> Unit = {}
                     )
 
                     val totalTip = "%.3f".format(totalState.value.toDouble())
-                    Text(text = "Rp. $totalTip", modifier = Modifier.align(
+                    Text(text = "Rp. $totalTipAmount", modifier = Modifier.align(
                         alignment = Alignment.CenterVertically
                     ),style = TextStyle(
                         fontWeight = FontWeight.Bold,
@@ -252,7 +256,7 @@ fun BillForm(modifier: Modifier = Modifier, onValueChange: (String) -> Unit = {}
                         onValueChange={newValue ->
                             sliderState.value = newValue
                         },
-                        steps = 5)
+                        steps = 10)
                 }
 
 
