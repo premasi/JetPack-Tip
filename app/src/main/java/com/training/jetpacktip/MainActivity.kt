@@ -21,7 +21,6 @@ import androidx.compose.material3.Slider
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.mutableDoubleStateOf
 import androidx.compose.runtime.mutableFloatStateOf
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
@@ -40,6 +39,8 @@ import androidx.compose.ui.unit.sp
 import com.training.jetpacktip.components.InputTextField
 import com.training.jetpacktip.ui.theme.JetPackTipTheme
 import com.training.jetpacktip.utils.calculateTotalTip
+import com.training.jetpacktip.utils.checkNull
+import com.training.jetpacktip.utils.formatRupiah
 import com.training.jetpacktip.widgets.RoundButton
 
 class MainActivity : ComponentActivity() {
@@ -72,7 +73,10 @@ fun MyApp(content: @Composable () -> Unit){
 
 @Preview
 @Composable
-fun TopHeader(totalBiaya : Double = 1.0){
+fun TopHeader(totalBiaya: String = "1000"){
+
+    val formatBiaya = formatRupiah(checkNull(totalBiaya))
+
     Surface (modifier = Modifier
         .fillMaxWidth()
         .height(200.dp)
@@ -80,7 +84,6 @@ fun TopHeader(totalBiaya : Double = 1.0){
         .clip(shape = RoundedCornerShape(12.dp)),
         color = colorResource(R.color.beige)
     ){
-        val total = "%.3f".format(totalBiaya)
         Column (
             horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.Center
@@ -90,7 +93,7 @@ fun TopHeader(totalBiaya : Double = 1.0){
                 color = colorResource(R.color.navy_blue),
                 fontWeight = FontWeight.Bold
             ))
-            Text("Rp. $total", style = TextStyle(
+            Text("Rp. $formatBiaya", style = TextStyle(
                 fontSize = 32.sp,
                 color = colorResource(R.color.navy_blue),
                 fontWeight = FontWeight.ExtraBold
@@ -133,7 +136,9 @@ fun BillForm(modifier: Modifier = Modifier, onValueChange: (String) -> Unit = {}
 
     val totalTipAmount = calculateTotalTip(totalState.value, sliderValue, splitState.value)
 
-    TopHeader()
+    TopHeader(
+        totalState.value
+    )
     Surface(
         modifier = Modifier
             .padding(all = 16.dp)
@@ -227,8 +232,7 @@ fun BillForm(modifier: Modifier = Modifier, onValueChange: (String) -> Unit = {}
                     )
                     )
 
-                    val totalTip = "%.3f".format(totalState.value.toDouble())
-                    Text(text = "Rp. $totalTipAmount", modifier = Modifier.align(
+                    Text(text = "Rp. ${formatRupiah(totalTipAmount)}", modifier = Modifier.align(
                         alignment = Alignment.CenterVertically
                     ),style = TextStyle(
                         fontWeight = FontWeight.Bold,
